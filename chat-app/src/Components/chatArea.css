@@ -1,0 +1,17 @@
+#chatArea {
+    /* width: 100%; */
+    /* display: flex;
+    flex-direction: row;
+    justify-content: space-between; */
+    flex-grow: 50;
+    background-color: khaki;
+    margin: 10px;
+    border-radius: 20px;
+    overflow-y: scroll;
+    
+  }
+  
+  #chatArea::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
