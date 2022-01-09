@@ -19,13 +19,13 @@ function ChatPage() {
       if(connection){
         console.log(connection);
       setConn(true);
-
       }
+
 
     })
     
 
-  }, [])
+  }, [conn])
 
   return (  
     <div className="container">
