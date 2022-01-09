@@ -1,10 +1,12 @@
+const User = require('../collections/users');
 const Users = require('../collections/users');
 
 const userDao = {
     createUser,
     checkUserName,
     getUser,
-    getAllUsers
+    getAllUsers,
+    addFriend
 }
 
 function createUser(username, password){
@@ -13,6 +15,10 @@ function createUser(username, password){
         password: password
     });
     return user.save();
+}
+
+function addFriend(username, friendname){
+    return Users.findOneAndUpdate({name: username}, {$push: {friendsList: friendname}})
 }
 
 function checkUserName(username) {

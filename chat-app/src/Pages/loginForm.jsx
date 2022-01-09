@@ -21,7 +21,7 @@ function LoginPage() {
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         if(response.data.name){
-          navigate("/user/1");
+          navigate(`/user/${response.data._id}`);
         }
         // 
         
