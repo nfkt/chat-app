@@ -6,13 +6,13 @@ const Message = mongoose.model('messages', {
         type: Schema.Types.ObjectId, 
         ref: 'user'
     },
-    to: [
+    to: 
         {
             type: Schema.Types.ObjectId, 
             ref: 'user'
         }
-    ],
-    message: String
+    ,
+    message: [String]
 })
 
 module.exports = Message;
