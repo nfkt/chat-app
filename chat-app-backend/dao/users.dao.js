@@ -1,4 +1,3 @@
-const User = require('../collections/users');
 const Users = require('../collections/users');
 
 const userDao = {

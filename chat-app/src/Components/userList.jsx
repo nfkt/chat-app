@@ -20,16 +20,12 @@ function UserList() {
 
     axios(config)
       .then(function (response) {
-          console.log(response.data);
-          response.data.forEach(
-              (val, index, array)=>{
-                  userList.push(val.name);
-                  setUserList([...userList]);
-              }
-          )
-          console.log(userList);
-          
-          
+        console.log(response.data);
+        response.data.forEach((val, index, array) => {
+          userList.push(val.name);
+          setUserList([...userList]);
+        });
+        console.log(userList);
       })
       .catch(function (error) {
         console.log(error);
@@ -37,16 +33,15 @@ function UserList() {
   };
 
   useEffect(() => {
-      userListFetch();
+    userListFetch();
   }, []);
 
   return (
     <div>
       <ul>
-          {userList.map((item, i)=>
-          <li> {item}</li>
-          )}
-        
+        {userList.map((item, i) => (
+          <li className="userList"> {item}</li>
+        ))}
       </ul>
     </div>
   );
