@@ -2,10 +2,15 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useContext } from "react";
+import UserListContext from "../contexts/user-list-context";
+
 
 function LoginPage() {
   const [inputs, setInputs] = useState({});
   const navigate = useNavigate();
+  const userListContext = useContext(UserListContext);
+  
 
   const handleLogin = () => {
     var config = {
@@ -21,6 +26,7 @@ function LoginPage() {
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         if(response.data.name){
+          userListContext.userListFetch();
           navigate(`/user/${response.data._id}`);
         }
         // 

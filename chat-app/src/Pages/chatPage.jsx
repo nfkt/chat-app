@@ -3,14 +3,29 @@ import { io } from "socket.io-client";
 import React, { useRef, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 import UserList from "../Components/userList";
 import TextBox from "../Components/textBox";
 import ChatArea from "../Components/chatArea";
+import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import UserListContext from "../contexts/user-list-context";
 
 function ChatPage() {
   const [conn, setConn] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const userListContext = useContext(UserListContext);
+
+  const { id } = useParams();
   const socketRef = useRef();
+
+  const chatHistoryFn = () => {
+    var data = JSON.stringify({
+      to: "",
+      from: `${id}`,
+    });
+  };
   useEffect(() => {
     socketRef.current = io.connect(`http://${window.location.hostname}:4000/`);
     socketRef.current.on("connected", (connection) => {
@@ -19,6 +34,7 @@ function ChatPage() {
         setConn(true);
       }
     });
+    // console.log(userListContext.userList);
   }, [conn]);
 
   return (

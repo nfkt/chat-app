@@ -1,13 +1,13 @@
-import './App.css';
-// import "bootstrap/dist/css/bootstrap.css";
+import "./App.css";
 import React from "react";
-import ChatPage from './Pages/chatPage';
-import RoutePaths from './routes/routepaths';
+import RoutePaths from "./routes/routepaths";
+import UserListContextProvider from "./contexts/providers/user-list-provider";
 
 function App() {
-
   return (
-   <RoutePaths />
+    <UserListContextProvider>
+      <RoutePaths />
+    </UserListContextProvider>
   );
 }
 
