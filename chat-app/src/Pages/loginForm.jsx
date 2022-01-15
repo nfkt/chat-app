@@ -24,9 +24,9 @@ function LoginPage() {
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
+        console.log(response.data);
         if(response.data.name){
-          userListContext.userListFetch();
+          userListContext.userListFetch(response.data._id);
           navigate(`/user/${response.data._id}`);
         }
         // 
@@ -47,7 +47,8 @@ function LoginPage() {
 
   useEffect(() => {
     console.log("Page mounted");
-    console.log(inputs);
+    userListContext.clearUsers();
+    console.log(userListContext.userList)
   }, []);
   return (
     <div>

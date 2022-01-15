@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import UserListContext from "../user-list-context";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const UserListContextProvider = ({ children }) => {
   const [userList, setUserList] = useState([]);
+  const [toId, setToId] = useState(null);
+  const [fromId, setFromId] = useState(userList ? {}:null);
+  // const { id } =useParams();
 
-  const userListFetch = () => {
+  const userListFetch = (id) => {
     var config = {
       method: "get",
       url: "http://localhost:3009/users/all",
@@ -18,25 +22,40 @@ const UserListContextProvider = ({ children }) => {
       .then(function (response) {
         console.log(response.data);
         response.data.forEach((val, index, array) => {
-          userList.push({ name: val.name, id: val._id });
-          setUserList([...userList]);
+          if (val._id !== id) {
+            userList.push({ name: val.name, id: val._id });
+            setUserList([...userList]);
+          } else {
+              setFromId({
+                id: val._id,
+                name: val.name,
+              });
+            
+          }
         });
-        console.log(userList);
       })
       .catch(function (error) {
         console.log(error);
       });
+    console.log("This is the id from params", id);
+  };
+  const setToIdFn = (id) => {
+    setToId(id);
   };
 
-  useEffect(() => {
-    // userListFetch();
-  }, []);
+  const clearUsers = () => {
+    setUserList([]);
+  };
 
   return (
     <UserListContext.Provider
       value={{
         userList,
-        userListFetch
+        userListFetch,
+        setToIdFn,
+        toId,
+        clearUsers,
+        fromId,
       }}
     >
       {" "}

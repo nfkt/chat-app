@@ -20,29 +20,33 @@ function ChatPage() {
   const { id } = useParams();
   const socketRef = useRef();
 
-  const chatHistoryFn = () => {
+  const chatHistoryFn = (toId) => {
     var data = JSON.stringify({
-      to: "",
-      from: `${id}`,
+      to: toId,
+      from: id,
     });
+    
   };
-  useEffect(() => {
-    socketRef.current = io.connect(`http://${window.location.hostname}:4000/`);
-    socketRef.current.on("connected", (connection) => {
-      if (connection) {
-        console.log(connection);
-        setConn(true);
-      }
-    });
-    // console.log(userListContext.userList);
-  }, [conn]);
+
+
+  // useEffect(() => {
+  //   socketRef.current = io.connect(`http://${window.location.hostname}:4000/`);
+  //   socketRef.current.on("connected", (connection) => {
+  //     if (connection) {
+  //       console.log(connection);
+  //       setConn(true);
+  //     }
+  //   });
+  //   return;
+  //   // console.log(userListContext.userList);
+  // }, []);
 
   return (
     <div className="container">
       <nav>Navbar</nav>
       <main>
         <div className="containerMain">
-          {conn ? <TextBox /> : <div>You are not connected</div>}
+          <TextBox /> 
           <ChatArea />
         </div>
       </main>
