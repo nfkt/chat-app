@@ -7,37 +7,38 @@ import { useEffect } from "react";
 import UserListContext from "../contexts/user-list-context";
 
 function TextBox(props) {
+  const userListContext = useContext(UserListContext);
   const [state, setState] = useState({
     message: "",
-    to: "NIhal",
-    from: "Farhan",
+    to: userListContext.toId.name,
+    from: userListContext.fromId.name,
   });
   const socketRef = useRef();
   const { id } = useParams();
-  const userListContext = useContext(UserListContext);
 
   const onTextChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  const onMessageSubmit = () => {
-    const { to, from, message } = state;
+  const onMessageSubmit = (to, from) => {
+ 
+    
     socketRef.current = io.connect(`http://${window.location.hostname}:4000/`); //,  { transports: ['websocket', 'polling', 'flashsocket'] }
-    socketRef.current.emit("message", { to, from, message });
-    messageHandler(state);
+    setState(previousState =>({ ...previousState,message: state.message}));
+    setState(previousState =>({ ...previousState,to: to.id, from: from.id }));
+    // setState({ message: state.message, to: to.id, from: from.id });
+    // socketRef.current.emit("message", { to, from, message });
+    // messageHandler(state);
     setState({ message: "", to, from });
     console.log(state);
+    console.log(userListContext.toId);
   };
-
-  useEffect(()=>{
-    
-  })
 
   const messageHandler = (to, from, message) => {
     const data = message;
     var config = {
       method: "post",
-      url: `http://localhost:3009/users/${id}/messa`,
+      url: `http://localhost:3009/users/${id}/chats`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -52,8 +53,10 @@ function TextBox(props) {
         console.log("Caught error:", err);
       });
   };
+useEffect(()=>{
+  setState(previousState =>({ ...previousState,to: userListContext.toId.name, from: userListContext.fromId.name }));
 
-
+}, [userListContext.toId, userListContext.fromId])
 
   return (
     <div id="textBox">
@@ -65,7 +68,7 @@ function TextBox(props) {
         name="message"
         value={state.message}
       />
-      <input type="submit" value="Send" onClick={onMessageSubmit} />
+      <input type="submit" value="Send" onClick={()=>onMessageSubmit(userListContext.toId, userListContext.fromId)} />
     </div>
   );
 }

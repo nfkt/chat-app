@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 const UserListContextProvider = ({ children }) => {
   const [userList, setUserList] = useState([]);
-  const [toId, setToId] = useState(null);
+  const [toId, setToId] = useState(userList ? {}:null);
   const [fromId, setFromId] = useState(userList ? {}:null);
   // const { id } =useParams();
 
@@ -43,9 +43,15 @@ const UserListContextProvider = ({ children }) => {
     setToId(id);
   };
 
+
+
   const clearUsers = () => {
     setUserList([]);
   };
+
+  useEffect(()=>{
+    setToId(toId);
+  }, [toId])
 
   return (
     <UserListContext.Provider

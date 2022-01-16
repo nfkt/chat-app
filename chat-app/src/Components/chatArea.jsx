@@ -11,8 +11,8 @@ function ChatArea(){
      useEffect(
 		() => {
 			socketRef.current = io.connect(`http://${window.location.hostname}:4000/`); //,  { transports: ['websocket', 'polling', 'flashsocket'] }
-			socketRef.current.on("message", ({ name, message }) => {
-				setChat([ ...chat, { name, message } ])
+			socketRef.current.on("message", ({ to, from,message }) => {
+				setChat([ ...chat, { to, from, message } ])
         console.log(chat);
 			})
 			return () => socketRef.current.disconnect()
@@ -20,10 +20,10 @@ function ChatArea(){
 		[ chat ]
 	)
 	const renderChat = () => {
-		return chat.map(({ name, message }, index) => (
+		return chat.map(({ to, from, message }, index) => (
 			<div key={index}>
 				<h3>
-					{name}: <span>{message}</span>
+					{to}: <span>{message}</span>
 				</h3>
 			</div>
 		))

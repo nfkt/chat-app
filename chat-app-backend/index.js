@@ -24,7 +24,7 @@ var Message = mongoose.model('Message',{
 io.on('connection', socket => {
   console.log('Connected');
   io.emit('connected', 'User connected');
-  socket.on('message', ({ name, message }) => {
+  socket.on('message', ({ to, from, message }) => {
    
   //     var message = new Message({
   //       name: name,
@@ -34,9 +34,9 @@ io.on('connection', socket => {
   //     if(err) console.log("Error while adding")
   // })
   
-    io.emit('message', { name, message })
+    io.emit('message', { to, from, message })
     
-    console.log({name, message})
+    console.log({to, from, message})
   })
 
 })
