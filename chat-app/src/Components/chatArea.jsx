@@ -13,7 +13,7 @@ function ChatArea(){
 			socketRef.current = io.connect(`http://${window.location.hostname}:4000/`); //,  { transports: ['websocket', 'polling', 'flashsocket'] }
 			socketRef.current.on("message", ({ to, from,message }) => {
 				setChat([ ...chat, { to, from, message } ])
-        console.log(chat);
+        
 			})
 			return () => socketRef.current.disconnect()
 		},
@@ -23,7 +23,7 @@ function ChatArea(){
 		return chat.map(({ to, from, message }, index) => (
 			<div key={index}>
 				<h3>
-					{to}: <span>{message}</span>
+				{from} to {to}: <span>{message}</span>
 				</h3>
 			</div>
 		))

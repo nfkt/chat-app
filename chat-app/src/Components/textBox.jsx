@@ -25,9 +25,8 @@ function TextBox(props) {
     
     socketRef.current = io.connect(`http://${window.location.hostname}:4000/`); //,  { transports: ['websocket', 'polling', 'flashsocket'] }
     setState(previousState =>({ ...previousState,message: state.message}));
-    setState(previousState =>({ ...previousState,to: to.id, from: from.id }));
-    // setState({ message: state.message, to: to.id, from: from.id });
-    // socketRef.current.emit("message", { to, from, message });
+    // setState(previousState =>({ ...previousState,to: to.id, from: from.id }));
+    socketRef.current.emit("message", { to: to.name, from: from.name, message: state.message });
     // messageHandler(state);
     setState({ message: "", to, from });
     console.log(state);
