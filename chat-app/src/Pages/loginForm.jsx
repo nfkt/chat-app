@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext } from "react";
 import UserListContext from "../contexts/user-list-context";
-
+import UserAuthContext from "../contexts/user-auth";
 
 function LoginPage() {
   const [inputs, setInputs] = useState({});
   const navigate = useNavigate();
   const userListContext = useContext(UserListContext);
+  const userAuthContext = useContext(UserAuthContext);
   
 
   const handleLogin = () => {
@@ -26,6 +27,7 @@ function LoginPage() {
       .then(function (response) {
         console.log(response.data);
         if(response.data.name){
+          userAuthContext.setLoginFn(true)
           userListContext.userListFetch(response.data._id);
           navigate(`/user/${response.data._id}`);
         }

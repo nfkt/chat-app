@@ -1,16 +1,16 @@
 // import "bootstrap/dist/css/bootstrap.css";
 import { io } from "socket.io-client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+
 
 import UserList from "../Components/userList";
 import TextBox from "../Components/textBox";
 import ChatArea from "../Components/chatArea";
-import { useParams } from "react-router-dom";
-import { useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import UserListContext from "../contexts/user-list-context";
+
 
 function ChatPage() {
   const [conn, setConn] = useState(false);
@@ -25,28 +25,26 @@ function ChatPage() {
       to: toId,
       from: id,
     });
-    
   };
 
+  useEffect(() => {
+    socketRef.current = io.connect(`http://${window.location.hostname}:4000/`);
+    socketRef.current.on("connected", (connection) => {
+      if (connection) {
+        console.log(connection);
+        setConn(true);
+      }
+    });
 
-  // useEffect(() => {
-  //   socketRef.current = io.connect(`http://${window.location.hostname}:4000/`);
-  //   socketRef.current.on("connected", (connection) => {
-  //     if (connection) {
-  //       console.log(connection);
-  //       setConn(true);
-  //     }
-  //   });
-  //   return;
-  //   // console.log(userListContext.userList);
-  // }, []);
+    // console.log(userListContext.userList);
+  }, []);
 
   return (
     <div className="container">
       <nav>Navbar</nav>
       <main>
         <div className="containerMain">
-          <TextBox /> 
+          <TextBox />
           <ChatArea />
         </div>
       </main>

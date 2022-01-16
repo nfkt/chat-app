@@ -49,9 +49,6 @@ const UserListContextProvider = ({ children }) => {
     setUserList([]);
   };
 
-  useEffect(()=>{
-    setToId(toId);
-  }, [toId])
 
   return (
     <UserListContext.Provider
