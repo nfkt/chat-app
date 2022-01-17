@@ -26,15 +26,25 @@ function TextBox(props) {
     socketRef.current = io.connect(`http://${window.location.hostname}:4000/`); //,  { transports: ['websocket', 'polling', 'flashsocket'] }
     setState(previousState =>({ ...previousState,message: state.message}));
     // setState(previousState =>({ ...previousState,to: to.id, from: from.id }));
+    if(to.id){
     socketRef.current.emit("message", { to: to.name, from: from.name, message: state.message });
-    // messageHandler(state);
+    messageHandler(to.id, from.id, state.message);
+    }else{
+      alert("Select a recipient to text");
+    }
     setState({ message: "", to, from });
     console.log(state);
     console.log(userListContext.toId);
   };
 
   const messageHandler = (to, from, message) => {
-    const data = message;
+    const data = {
+      to: to,
+      from: from,
+      message:{
+        message: message
+      }
+    };
     var config = {
       method: "post",
       url: `http://localhost:3009/users/${id}/chats`,

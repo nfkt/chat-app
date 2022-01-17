@@ -3,5 +3,15 @@ li.userList{
     text-align: left;
     padding-top: 8px;
     list-style-position: inside;
+    cursor: pointer;
 
+}
+
+li.userList:hover{
+    background-color: brown;
+
+}
+
+.open{
+    background-color: red;
 }

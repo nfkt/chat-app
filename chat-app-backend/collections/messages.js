@@ -12,7 +12,10 @@ const Message = mongoose.model('messages', {
             ref: 'user'
         }
     ,
-    message: [String]
+    message: [{
+        sent_at: Date,
+        message: String
+    }]
 })
 
 module.exports = Message;
