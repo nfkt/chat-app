@@ -11,39 +11,60 @@ function ChatArea() {
   const socketRef = useRef();
   const { id } = useParams();
 
-  useEffect(async() => {
+  useEffect(async () => {
     socketRef.current = io.connect(`http://${window.location.hostname}:4000/`); //,  { transports: ['websocket', 'polling', 'flashsocket'] }
     socketRef.current.on("message", ({ to, from, message }) => {
       setChat([...chat, { to, from, message }]);
     });
-
-    console.log(
-      await  chatHistoryHandler(userListContext.toId.id, userListContext.fromId.id)
+    if (userListContext.toId.id) {
+      console.log(
+        await chatHistoryHandler(
+          userListContext.toId.id,
+          userListContext.fromId.id
+        )
         // .then((response) => {
         //   console.log(response.data);
         // })
         // .catch((err) => {
         //   console.log(err);
         // })
-    );
+      );
+    }
+
     return () => socketRef.current.disconnect();
   }, [chat, userListContext.toId.id]);
 
-  const chatHistoryHandler = async(to, from) => {
-	  const chat_a = await fetchChatHistory(to, from);
-	  const chat_b = await fetchChatHistory(from, to);
-	  console.log(chat_a);
-	  console.log(chat_b);
-	 const sorted_chat_a = chat_a.message.map((item, i)=>({
-		to: chat_a.to,
-		from: chat_a.from,
-		sent_at : item.sent_at,
-		message: item.message
-	  }));
-	  console.log(sorted_chat_a);
-	  if(chat_a && chat_b) return {chat_a, chat_b}
-	  else return chat_a
+  const chatHistoryHandler = async (to, from) => {
+    const chat_a = await fetchChatHistory(to, from);
+    const chat_b = await fetchChatHistory(from, to);
+    console.log(chat_a);
+    console.log(chat_b);
 
+      const sorted_chat_a = chat_a ? (chat_a.message.map((item, i) => ({
+        to: chat_a.to,
+        from: chat_a.from,
+        sent_at: item.sent_at,
+        message: item.message,
+      }))): [];
+    
+
+    if (chat_b) {
+      const sorted_chat_b = chat_b.message.map((item, i) => ({
+        to: chat_b.to,
+        from: chat_b.from,
+        sent_at: item.sent_at,
+        message: item.message,
+      }));
+      const final_chat = [...sorted_chat_a, ...sorted_chat_b];
+      console.log(await sortChatHistory(final_chat));
+    } else {
+      const final_chat = [...sorted_chat_a];
+      console.log(await sortChatHistory(final_chat));
+    }
+
+    // console.log(sorted_chat_a);
+    // if (chat_a && chat_b) return { chat_a, chat_b };
+    // else return chat_a;
   };
 
   const fetchChatHistory = async (to, from) => {
@@ -54,17 +75,20 @@ function ChatArea() {
       headers: {
         "Content-Type": "application/json",
       },
-	  json: true,
+      json: true,
       data: data,
     };
-	try{
-		const x = await axios(config);
-		// console.log(x.data)
-		return await x.data ;
-	}catch(err){
-		console.log(err)
-	}
-    
+    try {
+      const x = await axios(config);
+      // console.log(x.data)
+      return await x.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const sortChatHistory = async (chatHistory) => {
+    return chatHistory.slice().sort((a, b) => b.sent_at - a.sent_at);
   };
   const renderChat = () => {
     return chat.map(({ to, from, message }, index) => (
