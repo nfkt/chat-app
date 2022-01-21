@@ -11,18 +11,18 @@ function UserList() {
 
   // const userListContext = useContext(UserListContext);
 
-  const clickUserListEvent = (check, i) => {
-    if (check.i === true) {
-      document
-        .querySelector(`.userList:nth-child(${i})`)
-        .classList.remove("open");
-      setCheck((prevInputs) => ({ ...prevInputs, [i]: false }));
-      console.log(check);
-    } else {
-      document.querySelector(`.userList:nth-child(${i})`).classList.add("open");
-      setCheck((prevInputs) => ({ ...prevInputs, [check.i]: true }));
-    }
-  };
+  // const clickUserListEvent = (check, i) => {
+  //   if (check.i === true) {
+  //     document
+  //       .querySelector(`.userList:nth-child(${i})`)
+  //       .classList.remove("open");
+  //     setCheck((prevInputs) => ({ ...prevInputs, [i]: false }));
+  //     console.log(check);
+  //   } else {
+  //     document.querySelector(`.userList:nth-child(${i})`).classList.add("open");
+  //     setCheck((prevInputs) => ({ ...prevInputs, [check.i]: true }));
+  //   }
+  // };
 
   useEffect(() => {
     
@@ -37,7 +37,7 @@ function UserList() {
             key={i}
             className="userList"
             onClick={() => {
-              clickUserListEvent(check, i + 1);
+              // clickUserListEvent(check, i + 1);
               userListContext.toId = item;
               userListContext.setToIdFn(userListContext.toId);
               console.log(userListContext.toId);

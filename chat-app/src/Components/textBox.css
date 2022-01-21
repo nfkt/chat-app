@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  flex-grow: 1;
+  flex-grow: 0;
 }
 
 #textBox input[type=text] {

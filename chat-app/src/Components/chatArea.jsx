@@ -12,54 +12,64 @@ function ChatArea() {
   const { id } = useParams();
 
   useEffect(async () => {
-    socketRef.current = io.connect(`http://${window.location.hostname}:4000/`); //,  { transports: ['websocket', 'polling', 'flashsocket'] }
-    socketRef.current.on("message", ({ to, from, message }) => {
-      setChat([...chat, { to, from, message }]);
-    });
+    scrollToBottom();
     if (userListContext.toId.id) {
-      console.log(
-        await chatHistoryHandler(
-          userListContext.toId.id,
-          userListContext.fromId.id
-        )
-        // .then((response) => {
-        //   console.log(response.data);
-        // })
-        // .catch((err) => {
-        //   console.log(err);
-        // })
+      const chatHistory = await chatHistoryHandler(
+        userListContext.toId,
+        userListContext.fromId
       );
+      setChat(await chatHistory);
+      socketRef.current = io.connect(
+        `http://${window.location.hostname}:4000/`
+      ); //,  { transports: ['websocket', 'polling', 'flashsocket'] }
+      socketRef.current.on("message", ({ to, from, message }) => {
+        setChat([...chatHistory, { to, from, message }]);
+      });
+
+      // .then((response) => {
+      //   console.log(response.data);
+      // })
+      // .catch((err) => {
+      //   console.log(err);
+      // })
     }
 
     return () => socketRef.current.disconnect();
-  }, [chat, userListContext.toId.id]);
+  }, [userListContext.toId.id]);
 
   const chatHistoryHandler = async (to, from) => {
-    const chat_a = await fetchChatHistory(to, from);
-    const chat_b = await fetchChatHistory(from, to);
+    const chat_a = await fetchChatHistory(to.id, from.id);
+    const chat_b = await fetchChatHistory(from.id, to.id);
     console.log(chat_a);
     console.log(chat_b);
 
-      const sorted_chat_a = chat_a ? (chat_a.message.map((item, i) => ({
-        to: chat_a.to,
-        from: chat_a.from,
-        sent_at: item.sent_at,
-        message: item.message,
-      }))): [];
-    
+    const sorted_chat_a = chat_a
+      ? chat_a.message.map((item, i) => ({
+          // to: chat_a.to,
+          to: to.name,
+          // from: chat_a.from,
+          from: from.name,
+          sent_at: item.sent_at,
+          message: item.message,
+        }))
+      : [];
 
     if (chat_b) {
       const sorted_chat_b = chat_b.message.map((item, i) => ({
-        to: chat_b.to,
-        from: chat_b.from,
+        // to: chat_b.to,
+        to: from.name,
+        // from: chat_b.from,
+        from: to.name,
         sent_at: item.sent_at,
         message: item.message,
       }));
       const final_chat = [...sorted_chat_a, ...sorted_chat_b];
-      console.log(await sortChatHistory(final_chat));
+      console.log(final_chat);
+      return await sortChatHistory(final_chat);
     } else {
       const final_chat = [...sorted_chat_a];
-      console.log(await sortChatHistory(final_chat));
+      console.log(final_chat);
+      return await sortChatHistory(final_chat);
     }
 
     // console.log(sorted_chat_a);
@@ -100,6 +110,10 @@ function ChatArea() {
     ));
   };
 
+const scrollToBottom = ()=>{
+  let scrollToBottomInChatArea = document.getElementById("chatArea");
+  scrollToBottomInChatArea.scrollTop =scrollToBottomInChatArea.scrollHeight;
+}
   return (
     <div id="chatArea">
       Chat area

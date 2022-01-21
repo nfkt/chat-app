@@ -20,13 +20,6 @@ function ChatPage() {
   const { id } = useParams();
   const socketRef = useRef();
 
-  const chatHistoryFn = (toId) => {
-    var data = JSON.stringify({
-      to: toId,
-      from: id,
-    });
-  };
-
   useEffect(() => {
     socketRef.current = io.connect(`http://${window.location.hostname}:4000/`);
     socketRef.current.on("connected", (connection) => {
